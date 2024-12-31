@@ -1,0 +1,24 @@
+#!/bin/bash
+
+mac_address="AC:BF:71:0A:7A:9F"
+timeout=120
+interval=3
+elapsed_time=0
+
+bluetoothctl remove $mac_address
+bluetoothctl untrust $mac_address
+
+bluetoothctl --timeout 5 scan on
+
+bluetoothctl pair $mac_address
+
+while ! bluetoothctl --timeout $interval connect $mac_address && [ $elapsed_time -lt $timeout ]; do
+    sleep $interval
+    elapsed_time=$((elapsed_time + interval))
+done
+
+if [ $elapsed_time -lt $timeout ]; then
+    bluetoothctl trust $mac_address
+else
+    echo "Connection timeout. Could not connect to $mac_address within 2 minutes."
+fi

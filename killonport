@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Check if port number is supplied as an argument
+if [ "$#" -eq 1 ]; then
+   port=$1
+else
+   # Prompt user to enter the port number
+   echo -n "Please enter the port number to be freed: "
+   read port
+fi
+
+# Check if the port number is valid
+if ! [[ "$port" =~ ^[0-9]+$ ]]; then
+    echo "Invalid input: Port number should be a positive integer."
+    exit 1
+fi
+
+# Find the process ID(PID) associated with the port number
+pid=`lsof -t -i:$port`
+
+# Check if the PID exists for the given port
+if [[ ! -z "$pid" ]]; then
+    # Kill the process using the PID
+    echo "Killing the process with PID $pid"
+    kill $pid
+    echo "Process with PID $pid on port $port has been killed."
+else
+    echo "No process running on port $port."
+fi

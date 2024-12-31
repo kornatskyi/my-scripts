@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Create a bin directory
+makeBinDir() {
+  if [[ ! -d "./bin" ]]
+  then
+    mkdir bin
+    echo "bin directory created"
+  fi
+}
+
+if [[ "$1" =~ ^.*\.(c)$ ]]
+then
+    makeBinDir
+    gcc -Wall -Werror -Wextra -pedantic -std=c11 -o "./bin/${1%.*}" "$1"
+elif [[ -d "./src" ]]
+then
+   makeBinDir
+        gcc -pedantic -std=c11 -o "./bin/main" "./src/main.c"
+        # gcc -Wall -Werror -Wextra -pedantic -std=c11 -o "./bin/main" "./src/main.c"
+        ./bin/main
+elif [[ ! -d "./src" ]]
+then
+    echo "No src directory found"
+elif [[ ! -f "./src/main.c" ]]
+then
+    echo "No main.c file found"
+else
+    echo "Something went wrong"
+fi
+
+
+
+

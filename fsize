@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+import os
+import argparse
+
+
+class FileInfo:
+    def __init__(self, fileName, fileSizeInBytes, sizeFormat='B') -> None:
+        self.fileName = fileName
+        self.fileSizeInBytes = fileSizeInBytes
+        self.sizeFormat = sizeFormat
+        self.size = self.convertSize()
+
+        pass
+
+    def convertSize(self):
+        size = None
+        bytes = self.fileSizeInBytes
+        sizeFormat = self.sizeFormat
+        if sizeFormat == 'B':
+            return bytes
+        elif sizeFormat == 'K':
+            return bytes / 1000
+        elif sizeFormat == 'M':
+            return bytes / 1000000
+        elif sizeFormat == 'G':
+            return bytes / 1000000000
+
+    def printInfo(self):
+        print(self.fileName + "    " + str(self.size) + self.sizeFormat)
+
+
+# Parse arguments form command line
+parser = argparse.ArgumentParser(description='Show file size')
+parser.add_argument('filePath', type=str, help='input path to the file')
+
+arguments = parser.parse_args()
+filePath = arguments.filePath
+
+fileStats = os.stat(filePath)
+fileSize = fileStats.st_size
+fileName = os.path.basename(filePath)
+
+
+def main():
+    fileInfo = FileInfo(fileName=fileName,
+                        fileSizeInBytes=fileSize, sizeFormat='B')
+    fileInfo.printInfo()
+    return
+
+
+if __name__ == "__main__":
+    main()

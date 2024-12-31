@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Function to add a path to a file
+add_path_to_file() {
+    local file=$1
+    local path=$2
+
+    # Check if the file exists
+    if [ -f "$file" ]; then
+        # Check if the path is already in the file
+        if ! grep -q "export PATH=.*$path.*" "$file"; then
+            echo "export PATH=\$PATH:$path" >> "$file"
+            echo "Path added to $file"
+        else
+            echo "Path already in $file"
+        fi
+    else
+        echo "$file not found"
+    fi
+}
+
+# Check if an argument is provided
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 <path-to-binary>"
+    exit 1
+fi
+
+# Get the absolute path of the binary
+binary_path=$(realpath $1)
+
+# Check if the binary exists
+if [ ! -f "$binary_path" ]; then
+    echo "Error: Binary not found at $binary_path"
+    exit 1
+fi
+
+# Extract the directory from the binary path
+dir_path=$(dirname "$binary_path")
+
+# Add the path to .bashrc and .zshrc
+add_path_to_file "$HOME/.bashrc" "$dir_path"
+add_path_to_file "$HOME/.zshrc" "$dir_path"

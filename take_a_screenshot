@@ -1,0 +1,5 @@
+gnome-screenshot -a -f ~/temporary-screenshot                    #take screenshot of an area
+xclip -selection clipboard -t image/png -i temporary-screenshot  #copy to clipboard 
+eog ~/temporary-screenshot                                       #open figure
+SCREENSHOT=$(zenity --file-selection --save --confirm-overwrite) #get path to save
+mv ~/temporary-screenshot "$SCREENSHOT"".png"                          #save

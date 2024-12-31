@@ -1,0 +1,9 @@
+#!/bin/bash
+
+ps_string=$(ps -aux | fzf)
+
+set -- $ps_string
+
+kill -9 $2
+
+echo "Killed: " $ps_string
